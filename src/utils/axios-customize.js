@@ -4,6 +4,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const instance = axios.create({
     baseURL: BACKEND_URL,
+    withCredentials: true
 });
 
 // Add a request interceptor
@@ -17,12 +18,10 @@ instance.interceptors.request.use(function (config) {
 
 // Add a response interceptor
 instance.interceptors.response.use(function (response) {
-    console.log("Response interceptor:", response);
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     return response && response.data ? response.data : response;
 }, function (error) {
-    console.log("Response error interceptor:", error);
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     return error?.response?.data ?? Promise.reject(error);
