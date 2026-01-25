@@ -12,8 +12,12 @@ import HomePage from "./components/home";
 import RegisterPage from "./pages/register";
 import { useEffect } from "react";
 import { callFetchAccount } from "./services/api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { doGetAccountAction } from "./redux/account/accountSlice";
+import Loading from "./components/loading";
+import NotFound from "./components/notFound";
+import AdminPage from "./pages/admin";
+import ProtectedRoutes from "./components/protectedRoutes";
 
 
 
@@ -30,12 +34,19 @@ const Layout = () => {
 
 export default function App() {
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(state => state.account.isAuthenticated)
+
+
   const getAccount = async () => {
+    if (
+      window.location.pathname === "/login"
+    ) return;
     const res = await callFetchAccount();
     if (res && res.data) {
       dispatch(doGetAccountAction(res.data))
     }
   }
+
   useEffect(() => {
     getAccount();
   }, [])
@@ -44,11 +55,33 @@ export default function App() {
     {
       path: "/",
       element: <Layout />,
-      errorElement: <div>Oops!404 not found.</div>,
+      errorElement: <NotFound />,
       children: [
         { index: true, element: <HomePage /> },
         {
           path: "contact",
+          element: <ContactPage />,
+        },
+        {
+          path: "book",
+          element: <BookPage />,
+        },
+      ],
+    },
+
+    {
+      path: "/admin",
+      element: <Layout />,
+      errorElement: <NotFound />,
+      children: [
+        {
+          index: true, element:
+            <ProtectedRoutes>
+              <AdminPage />
+            </ProtectedRoutes>
+        },
+        {
+          path: "user",
           element: <ContactPage />,
         },
         {
@@ -69,7 +102,13 @@ export default function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      {isAuthenticated === true
+        || window.location.pathname === "/login"
+        ?
+        <RouterProvider router={router} />
+        :
+        <Loading />
+      }
     </>
   )
 }
