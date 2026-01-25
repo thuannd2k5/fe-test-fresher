@@ -31,6 +31,23 @@ const Layout = () => {
   );
 }
 
+const LayoutAdmin = () => {
+  const isAdminRoute = window.location.pathname.startsWith("/admin");
+  const user = useSelector(state => state.account.user);
+  const isRole = user.role;
+
+
+  return (
+    <>
+      {isAdminRoute && isRole === "ADMIN" && <Header />}
+      {/* <Header /> */}
+      <Outlet />
+      {/* <Footer /> */}
+      {isAdminRoute && isRole === "ADMIN" && <Footer />}
+    </>
+  );
+}
+
 
 export default function App() {
   const dispatch = useDispatch();
@@ -40,6 +57,8 @@ export default function App() {
   const getAccount = async () => {
     if (
       window.location.pathname === "/login"
+      || window.location.pathname === "/register"
+      || window.location.pathname === "/"
     ) return;
     const res = await callFetchAccount();
     if (res && res.data) {
@@ -71,7 +90,7 @@ export default function App() {
 
     {
       path: "/admin",
-      element: <Layout />,
+      element: <LayoutAdmin />,
       errorElement: <NotFound />,
       children: [
         {
@@ -104,6 +123,8 @@ export default function App() {
     <>
       {isAuthenticated === true
         || window.location.pathname === "/login"
+        || window.location.pathname === "/register"
+        || window.location.pathname === "/"
         ?
         <RouterProvider router={router} />
         :
