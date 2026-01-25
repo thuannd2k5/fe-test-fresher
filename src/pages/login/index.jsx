@@ -1,11 +1,32 @@
-import { Button, Form, Input, Card } from 'antd';
-import { NavLink } from 'react-router-dom';
+import { Button, Form, Input, Card, message, notification } from 'antd';
+import { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { callLogin } from '../../services/api';
 
-const onFinish = values => {
-    console.log('Success:', values);
-};
 
 const LoginPage = () => {
+
+    const navigate = useNavigate();
+    const [isSubmit, setIsSubmit] = useState(false);
+
+    const onFinish = async (values) => {
+        const { email, password } = values;
+        setIsSubmit(true);
+        const res = await callLogin(email, password)
+        setIsSubmit(false);
+
+        if (res?.data?.access_token) {
+            message.success("Đăng nhập thành công!");
+            navigate('/');
+        } else {
+            notification.error({
+                message: "Có lỗi xảy ra",
+                description: Array.isArray(res?.message)
+                    ? res.message.join(", ")
+                    : res.message
+            })
+        }
+    };
     return (
         <>
             <div style={{
@@ -73,7 +94,7 @@ const LoginPage = () => {
                                     background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                                     border: "none"
                                 }}
-                                loading={false}
+                                loading={isSubmit}
                             >
                                 Đăng Nhập
                             </Button>

@@ -23,7 +23,9 @@ const RegisterPage = () => {
         } else {
             notification.error({
                 message: "Có lỗi xảy ra",
-                description: res.data.message
+                description: Array.isArray(res.data.message)
+                    ? res.data.message.join(", ")
+                    : res.data.message
             })
         }
     }
