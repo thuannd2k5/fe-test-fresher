@@ -1,10 +1,9 @@
 
 const AdminPage = () => {
-    return (
-        <>
-            ADmin dashboard
-        </>
-    )
-}
 
+    return (
+
+        <>Dash board</>
+    );
+};
 export default AdminPage;

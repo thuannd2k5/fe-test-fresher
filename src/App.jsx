@@ -18,6 +18,7 @@ import Loading from "./components/loading";
 import NotFound from "./components/notFound";
 import AdminPage from "./pages/admin";
 import ProtectedRoutes from "./components/protectedRoutes";
+import LayoutAdmin from "./components/admin/layoutAdmin";
 
 
 
@@ -27,23 +28,6 @@ const Layout = () => {
       <Header />
       <Outlet />
       <Footer />
-    </>
-  );
-}
-
-const LayoutAdmin = () => {
-  const isAdminRoute = window.location.pathname.startsWith("/admin");
-  const user = useSelector(state => state.account.user);
-  const isRole = user.role;
-
-
-  return (
-    <>
-      {isAdminRoute && isRole === "ADMIN" && <Header />}
-      {/* <Header /> */}
-      <Outlet />
-      {/* <Footer /> */}
-      {isAdminRoute && isRole === "ADMIN" && <Footer />}
     </>
   );
 }
@@ -58,7 +42,6 @@ export default function App() {
     if (
       window.location.pathname === "/login"
       || window.location.pathname === "/register"
-      || window.location.pathname === "/"
     ) return;
     const res = await callFetchAccount();
     if (res && res.data) {
