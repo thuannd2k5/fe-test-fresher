@@ -116,6 +116,7 @@ const UserPage = () => {
                 columns={columns}
                 dataSource={data}
                 onChange={onChange}
+                pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['1', '2', '3'] }}
                 style={{ margin: 20 }} />;
         </>
     )
