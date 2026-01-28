@@ -4,7 +4,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import LoginPage from "./pages/login";
-import ContactPage from "./pages/contact";
+import UserPage from "./pages/user";
 import BookPage from "./pages/book";
 import Header from "./components/header";
 import Footer from "./components/footer";
@@ -61,8 +61,8 @@ export default function App() {
       children: [
         { index: true, element: <HomePage /> },
         {
-          path: "contact",
-          element: <ContactPage />,
+          path: "user",
+          element: <UserPage />,
         },
         {
           path: "book",
@@ -84,7 +84,7 @@ export default function App() {
         },
         {
           path: "user",
-          element: <ContactPage />,
+          element: <UserPage />,
         },
         {
           path: "book",
