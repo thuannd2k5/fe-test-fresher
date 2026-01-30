@@ -84,7 +84,10 @@ export default function App() {
         },
         {
           path: "user",
-          element: <UserPage />,
+          element:
+            <ProtectedRoutes>
+              <UserPage />
+            </ProtectedRoutes>,
         },
         {
           path: "book",
