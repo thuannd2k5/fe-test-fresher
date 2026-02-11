@@ -1,6 +1,8 @@
 import { Button, Table, Form, Input, Row, Col, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { callFetchUser } from '../../services/api';
+import InputSearch from './inputSearch';
+import { MdDeleteOutline } from 'react-icons/md';
 
 
 const UserTable = () => {
@@ -9,20 +11,31 @@ const UserTable = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(5);
     const [total, setTotal] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         fetchUser();
     }, [current, pageSize])
 
 
-    const fetchUser = async () => {
+    const fetchUser = async (queryString) => {
+        setIsLoading(true);
         let query = `current=${current}&pageSize=${pageSize}`;
+
+        if (queryString) {
+            query += queryString
+        }
         const res = await callFetchUser(query);
 
         if (res && res.data) {
             setListUser(res.data.result);
             setTotal(res.data.meta.total);
         }
+        setIsLoading(false);
+    }
+
+    const handleSearch = (query) => {
+        fetchUser(query)
     }
 
     const columns = [
@@ -49,7 +62,7 @@ const UserTable = () => {
             title: 'Action',
             render: (text, record, index) => {
                 return (
-                    <><button>Delete</button></>
+                    <><MdDeleteOutline color='red' size="1.5em" /></>
                 )
             },
         },
@@ -72,7 +85,9 @@ const UserTable = () => {
 
     return (
         <>
+            <InputSearch handleSearch={handleSearch} />
             <Table rowKey="_id"
+                isLoading={isLoading}
                 columns={columns}
                 dataSource={listUser}
                 onChange={onChange}

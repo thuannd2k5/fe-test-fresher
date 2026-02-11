@@ -1,11 +1,28 @@
 import { Button, Col, Form, Input, Row, Card, Space } from "antd";
 
-const InputSearch = () => {
+const InputSearch = (props) => {
     const [form] = Form.useForm();
 
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
+        let query = "";
+
+        if (values.name) {
+            query += `&fullName=/${values.name}/i`
+        }
+
+        if (values.email) {
+            query += `&email=/${values.email}/i`
+        }
+
+        if (values.phone) {
+            query += `&phone=/${values.phone}/i`
+        }
+
+        if (query) {
+            props.handleSearch(query)
+        }
     };
+
 
     return (
         <div

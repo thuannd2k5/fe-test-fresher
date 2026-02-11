@@ -4,7 +4,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import LoginPage from "./pages/login";
-import UserPage from "./pages/user";
 import BookPage from "./pages/book";
 import Header from "./components/header";
 import Footer from "./components/footer";
@@ -19,6 +18,7 @@ import NotFound from "./components/notFound";
 import AdminPage from "./pages/admin";
 import ProtectedRoutes from "./components/protectedRoutes";
 import LayoutAdmin from "./components/admin/layoutAdmin";
+import UserTable from "./pages/user/userTable";
 
 
 
@@ -62,7 +62,7 @@ export default function App() {
         { index: true, element: <HomePage /> },
         {
           path: "user",
-          element: <UserPage />,
+          element: <UserTable />,
         },
         {
           path: "book",
@@ -86,7 +86,7 @@ export default function App() {
           path: "user",
           element:
             <ProtectedRoutes>
-              <UserPage />
+              <UserTable />
             </ProtectedRoutes>,
         },
         {
