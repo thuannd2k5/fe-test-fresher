@@ -5,7 +5,7 @@ import InputSearch from './inputSearch';
 import { MdDeleteOutline } from 'react-icons/md';
 import { GrPowerReset } from 'react-icons/gr';
 import { TfiImport } from 'react-icons/tfi';
-import { IoIosAddCircleOutline } from 'react-icons/io';
+import { IoMdAdd } from 'react-icons/io';
 import { LiaFileExportSolid } from 'react-icons/lia';
 
 
@@ -17,18 +17,26 @@ const UserTable = () => {
     const [total, setTotal] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
+    const [filter, setFilter] = useState("");
+    const [sortQuery, setSortQuery] = useState("");
+
     useEffect(() => {
         fetchUser();
-    }, [current, pageSize])
+    }, [current, pageSize, filter, sortQuery])
 
 
-    const fetchUser = async (queryString) => {
+    const fetchUser = async () => {
         setIsLoading(true);
         let query = `current=${current}&pageSize=${pageSize}`;
 
-        if (queryString) {
-            query += queryString
+        if (filter) {
+            query += `&${filter}`
         }
+
+        if (sortQuery) {
+            query += `&${sortQuery}`
+        }
+
         const res = await callFetchUser(query);
 
         if (res && res.data) {
@@ -39,7 +47,7 @@ const UserTable = () => {
     }
 
     const handleSearch = (query) => {
-        fetchUser(query)
+        setFilter(query)
     }
 
     const columns = [
@@ -84,6 +92,10 @@ const UserTable = () => {
             setPageSize(pagination.pageSize);
             setCurrent(1);
         }
+        if (sorter && sorter.field) {
+            const q = sorter.order === 'ascend' ? `sort=${sorter.field}` : `sort=-${sorter.field}`
+            setSortQuery(q);
+        }
     };
 
 
@@ -106,10 +118,13 @@ const UserTable = () => {
                             <TfiImport />&nbsp; Import
                         </Button>
                         <Button style={{ backgroundColor: "#187ced", color: "white", marginRight: "10px" }}>
-                            <IoIosAddCircleOutline />&nbsp;Them moi
+                            <IoMdAdd />&nbsp;Them moi
                         </Button>
-                        <Button style={{ border: "none", }}>
-                            <GrPowerReset size="1.5em" />
+                        <Button type="ghost" onClick={() => {
+                            setFilter("");
+                            setSortQuery("")
+                        }}>
+                            <GrPowerReset />
                         </Button>
                     </div>
                 </div>
