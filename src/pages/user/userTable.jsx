@@ -1,4 +1,4 @@
-import { Button, Table, Form, Input, Row, Col, Space } from 'antd';
+import { Button, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { callFetchUser } from '../../services/api';
 import InputSearch from './inputSearch';
@@ -7,6 +7,7 @@ import { GrPowerReset } from 'react-icons/gr';
 import { TfiImport } from 'react-icons/tfi';
 import { IoMdAdd } from 'react-icons/io';
 import { LiaFileExportSolid } from 'react-icons/lia';
+import DrawDetail from './drawDetail';
 
 
 const UserTable = () => {
@@ -19,6 +20,9 @@ const UserTable = () => {
 
     const [filter, setFilter] = useState("");
     const [sortQuery, setSortQuery] = useState("");
+
+    const [openViewDetail, setOpenViewDetail] = useState(false);
+    const [dataViewDetail, setDataViewDetail] = useState(null);
 
     useEffect(() => {
         fetchUser();
@@ -54,6 +58,16 @@ const UserTable = () => {
         {
             title: 'id',
             dataIndex: '_id',
+            render: (text, record, index) => {
+                return (
+                    <a
+                        onClick={() => {
+                            setDataViewDetail(record);
+                            setOpenViewDetail(true);
+                        }}
+                    >{record._id}</a>
+                )
+            }
         },
         {
             title: 'Tên Đầy Đủ',
@@ -129,7 +143,7 @@ const UserTable = () => {
                     </div>
                 </div>
                 <Table rowKey="_id"
-                    isLoading={isLoading}
+                    loading={isLoading}
                     columns={columns}
                     dataSource={listUser}
                     onChange={onChange}
@@ -140,8 +154,14 @@ const UserTable = () => {
                         total: total
 
                     }}
-                />;
+                />
             </div>
+            <DrawDetail
+                openViewDetail={openViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
+            />
         </>
     )
 }
