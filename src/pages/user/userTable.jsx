@@ -95,7 +95,41 @@ const UserTable = () => {
 
     ];
 
-
+    const handleCaption = () => {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: "20px", backgroundColor: "white" }}>
+                <span >
+                    Table List Users
+                </span>
+                <div style={{ display: "flex", gap: 15 }}>
+                    <Button
+                        icon={<LiaFileExportSolid />}
+                        type='primary'
+                    >
+                        Export
+                    </Button >
+                    <Button
+                        icon={<TfiImport />}
+                        type='primary'
+                    >
+                        Import
+                    </Button>
+                    <Button
+                        icon={<IoMdAdd />}
+                        type='primary'
+                    >
+                        Them moi
+                    </Button>
+                    <Button type="ghost" onClick={() => {
+                        setFilter("");
+                        setSortQuery("")
+                    }}>
+                        <GrPowerReset />
+                    </Button>
+                </div>
+            </div>
+        )
+    }
 
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination);
@@ -116,46 +150,27 @@ const UserTable = () => {
     return (
         <>
             <InputSearch handleSearch={handleSearch} />
-            <div style={{ margin: 20, backgroundColor: "white", padding: 32, }}>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between'
-                }}>
-                    <div style={{ fontSize: "25px", paddingBottom: "15px" }}>
-                        Table list users
-                    </div>
-                    <div style={{ display: "flex", paddingRight: "5px" }}>
-                        <Button style={{ backgroundColor: "#187ced", color: "white", marginRight: "10px" }}>
-                            <LiaFileExportSolid />&nbsp; Export
-                        </Button >
-                        <Button style={{ backgroundColor: "#187ced", color: "white", marginRight: "10px" }}>
-                            <TfiImport />&nbsp; Import
-                        </Button>
-                        <Button style={{ backgroundColor: "#187ced", color: "white", marginRight: "10px" }}>
-                            <IoMdAdd />&nbsp;Them moi
-                        </Button>
-                        <Button type="ghost" onClick={() => {
-                            setFilter("");
-                            setSortQuery("")
-                        }}>
-                            <GrPowerReset />
-                        </Button>
-                    </div>
-                </div>
-                <Table rowKey="_id"
-                    loading={isLoading}
-                    columns={columns}
-                    dataSource={listUser}
-                    onChange={onChange}
-                    pagination={{
-                        current: current,
-                        pageSize: pageSize,
-                        showSizeChanger: true,
-                        total: total
+            {handleCaption()}
+            <Table
+                rowKey="_id"
+                loading={isLoading}
+                columns={columns}
+                dataSource={listUser}
+                onChange={onChange}
+                pagination={{
+                    current: current,
+                    pageSize: pageSize,
+                    showSizeChanger: true,
+                    total: total,
+                    showTotal: (total, range) => {
+                        return (
+                            <div> {range[0]}-{range[1]} trên {total} rows</div>
+                        )
+                    }
 
-                    }}
-                />
-            </div>
+                }}
+
+            />
             <DrawDetail
                 openViewDetail={openViewDetail}
                 setOpenViewDetail={setOpenViewDetail}

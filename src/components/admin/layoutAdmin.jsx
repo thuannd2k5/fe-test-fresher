@@ -9,7 +9,7 @@ import {
     MenuUnfoldOutlined,
     DownOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Dropdown, Space, message } from 'antd';
+import { Layout, Menu, Dropdown, Space, message, Avatar } from 'antd';
 import { Outlet, useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import './layout.scss';
@@ -72,7 +72,7 @@ const LayoutAdmin = () => {
             navigate('/');
         }
     }
-    const itemsDropdown = [
+    let itemsDropdown = [
         {
             label: <label style={{ cursor: "pointer" }}>Quản lý tài khoản</label>,
             key: 'account',
@@ -86,6 +86,14 @@ const LayoutAdmin = () => {
         },
 
     ];
+    if (user?.role === "ADMIN") {
+        itemsDropdown.unshift({
+            label: <Link to="/admin">Trang quản trị</Link>,
+            key: 'admin'
+        })
+    }
+
+    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`
 
     return (
         <Layout
@@ -118,7 +126,8 @@ const LayoutAdmin = () => {
                     <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
-                                Welcome {user?.fullName}
+                                <Avatar src={urlAvatar} />
+                                {user?.fullName}
                                 <DownOutlined />
                             </Space>
                         </a>
