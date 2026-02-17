@@ -8,6 +8,9 @@ import { TfiImport } from 'react-icons/tfi';
 import { IoMdAdd } from 'react-icons/io';
 import { LiaFileExportSolid } from 'react-icons/lia';
 import DrawDetail from './drawDetail';
+import CreateUserPage from './createUser';
+import moment from 'moment';
+import { FORMAT_DATE_DISPLAY } from '../../utils/constant';
 
 
 const UserTable = () => {
@@ -23,6 +26,8 @@ const UserTable = () => {
 
     const [openViewDetail, setOpenViewDetail] = useState(false);
     const [dataViewDetail, setDataViewDetail] = useState(null);
+
+    const [openCreateUser, setOpenCreateUser] = useState(false);
 
     useEffect(() => {
         fetchUser();
@@ -85,6 +90,14 @@ const UserTable = () => {
             sorter: true
         },
         {
+            title: 'UpdatedAt',
+            dataIndex: 'updatedAt',
+            sorter: true,
+            render: (text, record, index) => {
+                return (moment(record?.updatedAt).format(FORMAT_DATE_DISPLAY))
+            }
+        },
+        {
             title: 'Action',
             render: (text, record, index) => {
                 return (
@@ -117,6 +130,9 @@ const UserTable = () => {
                     <Button
                         icon={<IoMdAdd />}
                         type='primary'
+                        onClick={() => {
+                            setOpenCreateUser(true)
+                        }}
                     >
                         Them moi
                     </Button>
@@ -176,6 +192,11 @@ const UserTable = () => {
                 setOpenViewDetail={setOpenViewDetail}
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
+            />
+            <CreateUserPage
+                openCreateUser={openCreateUser}
+                setOpenCreateUser={setOpenCreateUser}
+                fetchUser={fetchUser}
             />
         </>
     )
