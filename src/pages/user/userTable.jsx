@@ -11,6 +11,7 @@ import DrawDetail from './drawDetail';
 import CreateUserPage from './createUser';
 import moment from 'moment';
 import { FORMAT_DATE_DISPLAY } from '../../utils/constant';
+import UserImport from './userImport';
 
 
 const UserTable = () => {
@@ -28,6 +29,7 @@ const UserTable = () => {
     const [dataViewDetail, setDataViewDetail] = useState(null);
 
     const [openCreateUser, setOpenCreateUser] = useState(false);
+    const [openModalImport, setOpenModalImport] = useState(false);
 
     useEffect(() => {
         fetchUser();
@@ -124,6 +126,9 @@ const UserTable = () => {
                     <Button
                         icon={<TfiImport />}
                         type='primary'
+                        onClick={() => {
+                            setOpenModalImport(true)
+                        }}
                     >
                         Import
                     </Button>
@@ -197,6 +202,10 @@ const UserTable = () => {
                 openCreateUser={openCreateUser}
                 setOpenCreateUser={setOpenCreateUser}
                 fetchUser={fetchUser}
+            />
+            <UserImport
+                openModalImport={openModalImport}
+                setOpenModalImport={setOpenModalImport}
             />
         </>
     )
