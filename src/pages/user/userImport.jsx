@@ -1,8 +1,9 @@
 import { InboxOutlined } from "@ant-design/icons";
-import { Divider, message, Modal, Table } from "antd";
+import { Divider, message, Modal, notification, Table } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import { callImportUserBulk } from "../../services/api";
 
 const UserImport = (props) => {
     const { openModalImport, setOpenModalImport } = props;
@@ -52,17 +53,44 @@ const UserImport = (props) => {
             console.log('Dropped files', e.dataTransfer.files);
         },
     };
+
+    const handleSubmit = async () => {
+        const data = dataSource.map(item => ({
+            ...item,
+            password: "123456"
+        }))
+        const res = await callImportUserBulk(data);
+        if (res.data) {
+            notification.success({
+                description: `Success ${res?.data.countSuccess}, Error ${res?.data.countError}.`,
+                message: "Upload thành công"
+            });
+            setDataSource([]);
+            setOpenModalImport(false);
+            props.fetchUser();
+        } else {
+            notification.error({
+                description: res.message,
+                message: "Đã có lỗi xảy ra"
+            })
+        }
+
+
+    };
     return (
         <>
             <Modal
                 title="Import Data User"
                 open={openModalImport}
-                onOk={() => setOpenModalImport(false)}
-                onCancel={() => setOpenModalImport(false)}
+                onOk={() => handleSubmit()}
+                onCancel={() => {
+                    setOpenModalImport(false);
+                    setDataSource([]);
+                }}
                 okText="Import Data"
                 width={"50vw"}
                 okButtonProps={{
-                    disabled: true
+                    disabled: dataSource.length < 1
                 }}
                 maskClosable={false}
 
