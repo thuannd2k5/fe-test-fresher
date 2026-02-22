@@ -13,6 +13,8 @@ import moment from 'moment';
 import { FORMAT_DATE_DISPLAY } from '../../utils/constant';
 import UserImport from './userImport';
 import * as XLSX from "xlsx";
+import { GoPencil } from 'react-icons/go';
+import UpdateUser from './updateUser';
 
 
 const UserTable = () => {
@@ -31,6 +33,9 @@ const UserTable = () => {
 
     const [openCreateUser, setOpenCreateUser] = useState(false);
     const [openModalImport, setOpenModalImport] = useState(false);
+
+    const [openModalUpdate, setOpenModalUpdate] = useState(false);
+    const [dataUpdate, setDataUpdate] = useState(null);
 
     useEffect(() => {
         fetchUser();
@@ -104,7 +109,16 @@ const UserTable = () => {
             title: 'Action',
             render: (text, record, index) => {
                 return (
-                    <><MdDeleteOutline color='red' size="1.5em" /></>
+                    <div style={{ display: "flex", gap: 10 }}>
+                        <MdDeleteOutline color='red' size="1.5em" />
+                        <GoPencil
+                            color='yellow' size="1.5em"
+                            onClick={() => {
+                                setOpenModalUpdate(true)
+                                setDataUpdate(record)
+                            }}
+                        />
+                    </div>
                 )
             },
         },
@@ -217,6 +231,14 @@ const UserTable = () => {
                 openModalImport={openModalImport}
                 setOpenModalImport={setOpenModalImport}
                 fetchUser={fetchUser}
+            />
+            <UpdateUser
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                fetchUser={fetchUser}
+                listUser={listUser}
+                dataUpdate={dataUpdate}
+                setDataUpdate={setDataUpdate}
             />
         </>
     )
