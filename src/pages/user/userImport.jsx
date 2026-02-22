@@ -1,9 +1,12 @@
 import { InboxOutlined } from "@ant-design/icons";
 import { Divider, message, Modal, Table } from "antd";
 import Dragger from "antd/es/upload/Dragger";
+import { useState } from "react";
+import * as XLSX from "xlsx";
 
 const UserImport = (props) => {
     const { openModalImport, setOpenModalImport } = props;
+    const [dataSource, setDataSource] = useState([]);
 
     const dummyRequest = async ({ file, onSuccess }) => {
         setTimeout(() => {
@@ -18,10 +21,28 @@ const UserImport = (props) => {
         customRequest: dummyRequest,
         onChange(info) {
             const { status } = info.file;
-            if (status !== 'uploading') {
-                console.log('uploading');
-            }
+
             if (status === 'done') {
+                if (info.fileList && info.fileList.length > 0) {
+                    const file = info.fileList[0].originFileObj;
+                    let reader = new FileReader();
+                    reader.readAsArrayBuffer(file);
+                    reader.onload = function (e) {
+                        let data = new Uint8Array(e.target.result);
+                        let workbook = XLSX.read(data, { type: 'array' });
+                        // find the name of your sheet in the workbook first
+                        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                        // convert to json format
+                        const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                            header: ["fullName", "email", "phone"],
+                            range: 1, // Bắt đầu đọc từ dòng thứ 2 (bỏ qua header)
+                        });
+                        if (jsonData && jsonData.length > 0) {
+                            setDataSource(jsonData);
+                        }
+                    }
+                };
                 message.success(`${info.file.name} file uploaded successfully.`);
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
@@ -59,6 +80,8 @@ const UserImport = (props) => {
                 <div style={{ paddingTop: 20 }}>
                     <span>Dữ liệu Upload</span>
                     <Table
+                        rowKey="email"
+                        dataSource={dataSource}
                         columns={[
                             { title: 'Name', dataIndex: 'fullName' },
                             { title: 'Email', dataIndex: 'email' },
