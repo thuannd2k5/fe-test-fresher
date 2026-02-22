@@ -12,6 +12,7 @@ import CreateUserPage from './createUser';
 import moment from 'moment';
 import { FORMAT_DATE_DISPLAY } from '../../utils/constant';
 import UserImport from './userImport';
+import * as XLSX from "xlsx";
 
 
 const UserTable = () => {
@@ -110,6 +111,15 @@ const UserTable = () => {
 
     ];
 
+    const handleExportExcel = (data) => {
+        if (data.length > 0) {
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            XLSX.writeFile(workbook, "DataSheet.xlsx");
+        }
+    };
+
     const handleCaption = () => {
         return (
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: "20px", backgroundColor: "white" }}>
@@ -120,6 +130,7 @@ const UserTable = () => {
                     <Button
                         icon={<LiaFileExportSolid />}
                         type='primary'
+                        onClick={() => handleExportExcel(listUser)}
                     >
                         Export
                     </Button >
@@ -153,7 +164,6 @@ const UserTable = () => {
     }
 
     const onChange = (pagination, filters, sorter, extra) => {
-        console.log('params', pagination);
         if (pagination && pagination.current !== current) {
             setCurrent(pagination.current);
         }
