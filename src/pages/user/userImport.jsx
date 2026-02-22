@@ -4,6 +4,7 @@ import Dragger from "antd/es/upload/Dragger";
 import { useState } from "react";
 import * as XLSX from "xlsx";
 import { callImportUserBulk } from "../../services/api";
+import template from "./data/template.xlsx?url";
 
 const UserImport = (props) => {
     const { openModalImport, setOpenModalImport } = props;
@@ -102,7 +103,8 @@ const UserImport = (props) => {
                     </p>
                     <p className="ant-upload-text">Click or drag file to this area to upload</p>
                     <p className="ant-upload-hint">
-                        Support for a single upload. Only accepted file format: .csv, .xlsx, .xls
+                        Support for a single upload. Only accepted file format: .csv, .xlsx, .xls.
+                        <a onClick={e => { e.stopPropagation() }} href={template} download>Download Sample Template</a>
                     </p>
                 </Dragger>
                 <div style={{ paddingTop: 20 }}>
