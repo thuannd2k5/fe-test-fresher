@@ -1,6 +1,6 @@
-import { Button, Table } from 'antd';
+import { Button, message, notification, Popconfirm, Table } from 'antd';
 import { useEffect, useState } from 'react';
-import { callFetchUser } from '../../services/api';
+import { callDeleteUser, callFetchUser } from '../../services/api';
 import InputSearch from './inputSearch';
 import { MdDeleteOutline } from 'react-icons/md';
 import { GrPowerReset } from 'react-icons/gr';
@@ -67,6 +67,21 @@ const UserTable = () => {
         setFilter(query)
     }
 
+    const handleDeleteUser = async (id) => {
+        setIsLoading(true);
+        const res = await callDeleteUser(id);
+        if (res && res.data) {
+            message.success("Xóa người dùng thành công!");
+            await fetchUser();
+        } else {
+            notification.error({
+                message: "Có lỗi xảy ra",
+                description: res.message
+            })
+        }
+        setIsLoading(false);
+    }
+
     const columns = [
         {
             title: 'id',
@@ -110,7 +125,18 @@ const UserTable = () => {
             render: (text, record, index) => {
                 return (
                     <div style={{ display: "flex", gap: 10 }}>
-                        <MdDeleteOutline color='red' size="1.5em" />
+                        <Popconfirm
+                            placement="left"
+                            title="Xóa người dùng"
+                            description="Bạn có chắc chắn muốn xóa người dùng này?"
+                            onConfirm={() => handleDeleteUser(record._id)}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <span>
+                                <MdDeleteOutline color='red' size="1.5em" />
+                            </span>
+                        </Popconfirm>
                         <GoPencil
                             color='yellow' size="1.5em"
                             onClick={() => {
