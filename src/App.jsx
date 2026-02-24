@@ -4,7 +4,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import LoginPage from "./pages/login";
-import BookPage from "./pages/book";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import HomePage from "./components/home";
@@ -19,6 +18,7 @@ import AdminPage from "./pages/admin";
 import ProtectedRoutes from "./components/protectedRoutes";
 import LayoutAdmin from "./components/admin/layoutAdmin";
 import UserTable from "./pages/user/userTable";
+import BookPage from "./pages/book/bookPage";
 
 
 

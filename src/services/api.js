@@ -37,3 +37,11 @@ export const callUpdateUser = (_id, fullName, phone) => {
 export const callDeleteUser = (id) => {
     return axios.delete(`/api/v1/user/${id}`)
 }
+
+
+
+
+
+export const callFetchBook = (query) => {
+    return axios.get(`/api/v1/book?${query}`)
+}
