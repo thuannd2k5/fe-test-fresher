@@ -44,20 +44,20 @@ const InputBook = (props) => {
                 >
                     <Row gutter={[16, 16]}>
                         <Col xs={24} md={8}>
-                            <Form.Item label="mainText" name="mainText">
-                                <Input placeholder="Tên Sách" />
+                            <Form.Item label="Tên Sách" name="mainText">
+                                <Input />
                             </Form.Item>
                         </Col>
 
                         <Col xs={24} md={8}>
-                            <Form.Item label="author" name="author">
-                                <Input placeholder="Tác Giả" />
+                            <Form.Item label="Tác Giả" name="author">
+                                <Input />
                             </Form.Item>
                         </Col>
 
                         <Col xs={24} md={8}>
-                            <Form.Item label="category" name="category">
-                                <Input placeholder="Thể Loại" />
+                            <Form.Item label="Thể Loại" name="category">
+                                <Input />
                             </Form.Item>
                         </Col>
                     </Row>

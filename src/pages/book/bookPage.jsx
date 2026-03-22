@@ -5,11 +5,12 @@ import { MdOutlineDelete } from "react-icons/md";
 import moment from "moment";
 import { FORMAT_DATE_DISPLAY } from "../../utils/constant";
 import { LuPencil } from "react-icons/lu";
-import SearchBook from "./inputBook";
+import InputBook from "./inputBook";
 import { LiaFileExportSolid } from "react-icons/lia";
 import { TfiImport } from "react-icons/tfi";
 import { IoMdAdd } from "react-icons/io";
 import { GrPowerReset } from "react-icons/gr";
+import ViewDetailBook from "./viewDetailBook";
 
 const BookPage = () => {
     const [dataBook, setDataBook] = useState([]);
@@ -19,6 +20,9 @@ const BookPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [filter, setFilter] = useState("");
     const [sortQuery, setSortQuery] = useState("sort=-updatedAt");
+
+    const [openViewDetail, setOpenViewDetail] = useState(false);
+    const [dataViewDetail, setDataViewDetail] = useState(null);
 
 
     useEffect(() => {
@@ -53,7 +57,10 @@ const BookPage = () => {
             dataIndex: '_id',
             render: (value, record, index) => {
                 return (
-                    <a>{record?._id}</a>
+                    <a onClick={() => {
+                        setOpenViewDetail(true)
+                        setDataViewDetail(record)
+                    }}>{record?._id}</a>
                 )
             },
         },
@@ -77,7 +84,12 @@ const BookPage = () => {
         {
             title: 'Giá tiền',
             sorter: true,
-            dataIndex: 'price'
+            dataIndex: 'price',
+            render: (value, record, index) => {
+                return (
+                    <>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(record.price)}</>
+                )
+            }
         },
         {
             title: 'Ngày Cập Nhật',
@@ -166,7 +178,7 @@ const BookPage = () => {
 
     return (
         <>
-            <SearchBook handleSearch={handleSearch} />
+            <InputBook handleSearch={handleSearch} />
             {handleCaption()}
             <Table
                 rowKey="_id"
@@ -186,6 +198,12 @@ const BookPage = () => {
                     }
                 }}
             />;
+            <ViewDetailBook
+                openViewDetail={openViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
+            />
         </>
     )
 }
